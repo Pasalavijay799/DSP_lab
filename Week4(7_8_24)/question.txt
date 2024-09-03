@@ -1,0 +1,6 @@
+python code for x1=[1,2,3,4] and x2=[4,3,2,1]  perform discrete time fourier transform by function def dtft(x) and return x  and X1=dtft(x1) ,X2=dtft(x2) and X3=dtft(X1+X2) and take if condition X1+X2==X3 then perform  frequency shift dtft(x1-d) =dtft(x1)xe^-j3w and time delay x1=[1,2,3,4,0,0,0,0]  and  x2=[0,0,0,0,4,3,2,1]
+
+1)perform linearity 
+2)time shifting property 
+3)energy spectral density 
+4)convolution
