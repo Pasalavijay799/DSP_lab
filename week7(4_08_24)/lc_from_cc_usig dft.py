@@ -48,11 +48,11 @@ circular_conv = IDFT(Y_padded)
 
 
 plt.subplot(1, 2, 1)
-plt.stem(linear_conv, use_line_collection=True)
+plt.stem(linear_conv)
 plt.title('Linear Convolution')
 
 plt.subplot(1, 2, 2)
-plt.stem(np.real(circular_conv), use_line_collection=True)
+plt.stem(np.real(circular_conv))
 plt.title('Circular Convolution')
 print(Y_padded)
 plt.tight_layout()

@@ -16,50 +16,44 @@ def idft(X):
             x[n] += X[k] * np.exp(2j * np.pi * k * n / N)
     return x / N
 
-def overlap_save(x, h):
-    L = len(h)               # Length of the filter
-    N = 2 * L - 1            # Segment size, typically L + M - 1
-    M = len(x)               # Length of the input signal
+def overlap_save(x, h, M):
+    L = len(h)               
+    N = M + L - 1            
+    P = L - 1                
     
-    # Zero-pad the filter to length N
+  
     h_padded = np.zeros(N)
     h_padded[:L] = h
     
-    # Compute the DFT of the filter
+
     H = dft(h_padded)
-    
-    # Initialize the output array
-    y = np.zeros(M + L - 1)
-    
-    # Process each segment
-    for i in range(0, M, L):
-        # Extract the current segment with zero-padding
-        x_segment = np.zeros(N)
-        if i + L <= M:
-            x_segment[:L] = x[i:i+L]
+   
+    y = []
+
+    for i in range(0, len(x), M):
+        if i == 0:
+            x_segment = np.zeros(N)
+            x_segment[-M:] = x[:M]
         else:
-            x_segment[:M-i] = x[i:]
+            x_segment = np.zeros(N)
+            x_segment[:P] = x[i-P:i]
+            x_segment[P:] = x[i:i+M]
         
-        # Compute the DFT of the segment
         X = dft(x_segment)
-        
-        # Multiply in the frequency domain
+
         Y = X * H
         
-        # Compute the inverse DFT
         y_segment = np.real(idft(Y))
-        
-        # Overlap-save: discard the first L-1 points and add the rest to the output
+  
         if i == 0:
-            y[i:i+L] = y_segment[L-1:]  # No overlap on the first segment
+            y.extend(y_segment[P:]) 
         else:
-            y[i:i+L] += y_segment[L-1:]
-    
-    # Return the valid part of the output
-    return y[:M + L - 1]
+            y.extend(y_segment[P:M+P])  
 
-# Example usage
-x = np.array([3, -1, 0, 1, 3, 2, 0, 1, 2, 1])
+    return np.array(y)
+55
+x = np.array([3, -1, 0, 3, 2, 0, 1, 2, 1])
 h = np.array([1, 1, 1])
-y = overlap_save(x, h)
+M = 3
+y = overlap_save(x, h, M)
 print("Output:", y)
